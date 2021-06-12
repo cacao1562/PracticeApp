@@ -3,6 +3,7 @@ package com.example.practiceapp.di
 import com.example.practiceapp.BuildConfig
 import com.example.practiceapp.api.ApiService
 import com.example.practiceapp.util.BASE_URL
+import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -45,7 +46,7 @@ object NetworkModule {
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-//            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
             .build()
     }
 
