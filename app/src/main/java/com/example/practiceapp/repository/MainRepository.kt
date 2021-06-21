@@ -34,4 +34,24 @@ class MainRepository @Inject constructor(
             onError(message())
         }
     }.onStart { onStart() }.onCompletion { onComplete() }.flowOn(Dispatchers.IO)
+
+    @WorkerThread
+    fun fetchMapInfo(
+        cid : String,
+        onStart: () -> Unit,
+        onComplete: () -> Unit,
+        onError: (String?) -> Unit
+    ) = flow {
+        val response = service.fetchMapInfo(cid)
+        response.suspendOnSuccess {
+            data.whatIfNotNull { response ->
+                val s2graph = response.s2graph
+                emit(s2graph)
+            }
+        }.onError {
+            onError("[Code: ${statusCode.code}]: ${message()}")
+        }.onException {
+            onError(message())
+        }
+    }.onStart { onStart() }.onCompletion { onComplete() }.flowOn(Dispatchers.IO)
 }

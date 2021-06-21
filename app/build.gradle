@@ -81,4 +81,16 @@ dependencies {
 
     // whatIf
     implementation "com.github.skydoves:whatif:1.1.0"
+
+    // datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0-beta01"
+
+    // livedata
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+
+    // startup
+    implementation "androidx.startup:startup-runtime:1.0.0"
+
+    // debugging
+    implementation "com.jakewharton.timber:timber:4.7.1"
 }

@@ -1,6 +1,5 @@
 package com.example.practiceapp.ui.main
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
@@ -12,6 +11,7 @@ import com.skydoves.whatif.whatIf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,18 +30,25 @@ class MainViewModel @Inject constructor(
 
     private val usersFetchingIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     private val usersListFlow = usersFetchingIndex.flatMapLatest { page ->
-        Log.d("ddd", "MainViewModel usersFetchingIndex page = $page")
-        mainRepository.fetchUsers(
+        Timber.d("MainViewModel usersFetchingIndex page = $page")
+//        mainRepository.fetchUsers(
+//            onStart = { _isLoading.postValue(true) },
+//            onComplete = { _isLoading.postValue(false) },
+//            onError = { _toastMessage.postValue(it) }
+//        )
+        mainRepository.fetchMapInfo(
+            cid = "269932132",
             onStart = { _isLoading.postValue(true) },
             onComplete = { _isLoading.postValue(false) },
             onError = { _toastMessage.postValue(it) }
         )
     }
     init {
-        Log.d("ddd", "MainViewModel init")
+        Timber.d("MainViewModel init")
         viewModelScope.launch {
             usersListFlow.collect {
-                _usersList.value = it
+                Timber.d("map info = $it")
+//                _usersList.value = it
             }
         }
     }
