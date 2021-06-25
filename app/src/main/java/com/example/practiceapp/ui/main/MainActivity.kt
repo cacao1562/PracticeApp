@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.practiceapp.databinding.ActivityMainBinding
 import com.example.practiceapp.util.AppPrefsStorage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var appPrefsStorage: AppPrefsStorage
 
+    lateinit var mAdapter: UserInfoAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,6 +37,8 @@ class MainActivity : AppCompatActivity() {
             vm = viewModel
         }
 
+        initListView()
+
         appPrefsStorage.isDarkTheme.asLiveData().observe(this) { isDark ->
             Timber.d("isDarkMode = $isDark")
             setDefaultNightMode(if (isDark) MODE_NIGHT_YES else MODE_NIGHT_NO)
@@ -40,10 +46,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnDark.setOnClickListener {
-            lifecycleScope.launch {
+            lifecycleScope.launchWhenCreated {
                 val isDark = appPrefsStorage.isDarkTheme.first()
                 appPrefsStorage.setDarkTheme(!isDark)
             }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.usersInfo.collectLatest {
+                mAdapter.submitData(it)
+            }
+        }
+    }
+
+    private fun initListView() {
+        mAdapter = UserInfoAdapter()
+        binding.rvMain.apply {
+            setHasFixedSize(true)
+            adapter = mAdapter
         }
     }
 }

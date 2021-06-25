@@ -39,6 +39,7 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding = true
     }
 
 }
@@ -93,4 +94,6 @@ dependencies {
 
     // debugging
     implementation "com.jakewharton.timber:timber:4.7.1"
+
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
 }

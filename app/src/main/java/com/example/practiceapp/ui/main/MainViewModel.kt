@@ -6,7 +6,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.example.practiceapp.repository.MainRepository
+import com.example.practiceapp.repository.UserDataSource
 import com.skydoves.whatif.whatIf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -31,24 +35,23 @@ class MainViewModel @Inject constructor(
     private val usersFetchingIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     private val usersListFlow = usersFetchingIndex.flatMapLatest { page ->
         Timber.d("MainViewModel usersFetchingIndex page = $page")
-//        mainRepository.fetchUsers(
-//            onStart = { _isLoading.postValue(true) },
-//            onComplete = { _isLoading.postValue(false) },
-//            onError = { _toastMessage.postValue(it) }
-//        )
-        mainRepository.fetchUsersInfo(
-            page = 1,
+        mainRepository.fetchUsers(
             onStart = { _isLoading.postValue(true) },
             onComplete = { _isLoading.postValue(false) },
             onError = { _toastMessage.postValue(it) }
         )
     }
+
+    val usersInfo = Pager(PagingConfig(5)) {
+        UserDataSource(mainRepository)
+    }.flow.cachedIn(viewModelScope)
+
     init {
         Timber.d("MainViewModel init")
         viewModelScope.launch {
             usersListFlow.collect {
                 Timber.d("usersListFlow = $it")
-//                _usersList.value = it
+                _usersList.value = it
             }
         }
     }

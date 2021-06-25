@@ -15,6 +15,7 @@
   - ViewModel - UI related data holder, lifecycle aware.
   - Startup - initialize application startup.
   - Datastore - data storage solution.
+  - Paging3 - helps you load and display pages of data.
 
 - Architecture
   - MVVM Architecture (View - DataBinding - ViewModel - Model)
