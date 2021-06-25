@@ -13,6 +13,9 @@
 - JetPack
   - Lifecycle - dispose of observing data when lifecycle state changes.
   - ViewModel - UI related data holder, lifecycle aware.
+  - Startup - initialize application startup.
+  - Datastore - data storage solution.
+
 - Architecture
   - MVVM Architecture (View - DataBinding - ViewModel - Model)
   - Repository pattern
@@ -20,6 +23,8 @@
 - [Sandwich](https://github.com/skydoves/Sandwich) - construct lightweight http API response and handling error responses.
 - [Moshi](https://github.com/square/moshi/) - A modern JSON library for Kotlin and Java.
 - [WhatIf](https://github.com/skydoves/whatif) - checking nullable object and empty collections more fluently.
+- [Timber](https://github.com/JakeWharton/timber) - debbugging logger.
+
 
 ## Reference
 - [skydoves/Pokedex](https://github.com/skydoves/Pokedex)

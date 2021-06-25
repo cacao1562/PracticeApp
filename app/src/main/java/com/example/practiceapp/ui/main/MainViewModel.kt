@@ -36,8 +36,8 @@ class MainViewModel @Inject constructor(
 //            onComplete = { _isLoading.postValue(false) },
 //            onError = { _toastMessage.postValue(it) }
 //        )
-        mainRepository.fetchMapInfo(
-            cid = "269932132",
+        mainRepository.fetchUsersInfo(
+            page = 1,
             onStart = { _isLoading.postValue(true) },
             onComplete = { _isLoading.postValue(false) },
             onError = { _toastMessage.postValue(it) }
@@ -47,7 +47,7 @@ class MainViewModel @Inject constructor(
         Timber.d("MainViewModel init")
         viewModelScope.launch {
             usersListFlow.collect {
-                Timber.d("map info = $it")
+                Timber.d("usersListFlow = $it")
 //                _usersList.value = it
             }
         }
