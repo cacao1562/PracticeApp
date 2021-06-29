@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practiceapp.databinding.ItemUserInfoBinding
 import com.example.practiceapp.model.UserInfo
+import com.example.practiceapp.util.loadImageOrDefault
 
 class UserInfoAdapter: PagingDataAdapter<UserInfo, UserInfoViewHolder>(DIFF_CALLBACK) {
 
@@ -40,6 +41,7 @@ class UserInfoViewHolder(private val binding: ItemUserInfoBinding):
         binding.run {
             tvId.text = userInfo.id
             tvInfo.text = userInfo.name
+            ivThumbnail.loadImageOrDefault(userInfo.avatarImg)
         }
     }
     companion object {

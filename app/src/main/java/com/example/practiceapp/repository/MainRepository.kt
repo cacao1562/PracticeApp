@@ -24,10 +24,8 @@ class MainRepository @Inject constructor(
     ) = flow {
         val response = service.fetchUsers()
         response.suspendOnSuccess {
-            data.whatIfNotNull { response ->
-                val users = response.users
-                emit(users)
-            }
+            val users = data.users
+            emit(users)
         }.onError {
             onError("[Code: ${statusCode.code}]: ${message()}")
         }.onException {
@@ -44,10 +42,8 @@ class MainRepository @Inject constructor(
     ) = flow {
         val response = service.fetchUsersInfo(page)
         response.suspendOnSuccess {
-            data.whatIfNotNull { response ->
-                val users = response.users
-                emit(users)
-            }
+            val users = data.users
+            emit(users)
         }.onError {
             onError("[Code: ${statusCode.code}]: ${message()}")
         }.onException {

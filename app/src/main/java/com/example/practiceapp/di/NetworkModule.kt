@@ -46,7 +46,7 @@ object NetworkModule {
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
+            .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory.create())
             .build()
     }
 
