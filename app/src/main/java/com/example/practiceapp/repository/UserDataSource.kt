@@ -14,12 +14,11 @@ class UserDataSource @Inject constructor(
         try {
 
             val currentLoadingPageKey = params.key ?: 1
-
             val response = repository.fetchUsersInfo(
                 page = currentLoadingPageKey,
                 onStart = {},
                 onComplete = {},
-                onError = {}
+                onError = { throw Exception(it) }
             )
             val responseData = response.first()
 

@@ -6,13 +6,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.example.practiceapp.databinding.ActivityMainBinding
+import com.example.practiceapp.ui.adapter.UserLoadStateAdapter
 import com.example.practiceapp.util.AppPrefsStorage
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -37,8 +37,12 @@ class MainActivity : AppCompatActivity() {
             vm = viewModel
         }
 
-        initListView()
+        initDartMode()
+        initAdapter()
 
+    }
+
+    private fun initDartMode() {
         appPrefsStorage.isDarkTheme.asLiveData().observe(this) { isDark ->
             Timber.d("isDarkMode = $isDark")
             setDefaultNightMode(if (isDark) MODE_NIGHT_YES else MODE_NIGHT_NO)
@@ -51,19 +55,33 @@ class MainActivity : AppCompatActivity() {
                 appPrefsStorage.setDarkTheme(!isDark)
             }
         }
+    }
+
+    private fun initAdapter() {
+        mAdapter = UserInfoAdapter()
+        binding.rvMain.apply {
+            setHasFixedSize(true)
+            adapter = mAdapter.withLoadStateHeaderAndFooter(
+                header = UserLoadStateAdapter(mAdapter),
+                footer = UserLoadStateAdapter(mAdapter)
+            )
+        }
+
+        binding.swipeRefresh.setOnRefreshListener {
+            mAdapter.refresh()
+        }
+
+        lifecycleScope.launchWhenCreated {
+            mAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.swipeRefresh.isRefreshing = loadStates.mediator?.refresh is LoadState.Loading
+            }
+        }
 
         lifecycleScope.launchWhenCreated {
             viewModel.usersInfo.collectLatest {
                 mAdapter.submitData(it)
             }
         }
-    }
 
-    private fun initListView() {
-        mAdapter = UserInfoAdapter()
-        binding.rvMain.apply {
-            setHasFixedSize(true)
-            adapter = mAdapter
-        }
     }
 }
